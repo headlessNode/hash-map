@@ -21,7 +21,14 @@ class HashMap{
             this.capacity = this.capacity * 2;
             this.set(keyValue);
         }else{
-            this.buckets[keyIndex] = [keyIndex, keyValue];
+            this.buckets[keyIndex] = keyValue;
+        }
+    }
+    get(key){
+        if(this.buckets[key]){
+            return this.buckets[key];
+        }else{
+            return null;
         }
     }
 }
@@ -39,3 +46,4 @@ hashmap.set('Fenrir');
 
 console.log(hashmap);
 console.log(hashmap.buckets.length);
+console.log(hashmap.get(20));
