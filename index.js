@@ -35,10 +35,13 @@ class HashMap{
         let exists = false;
         this.buckets.forEach((value,index)=>{
             if(index === key){
-                return true;
+                exists = true;
             }
         });
         return exists;
+    }
+    remove(key){
+        this.buckets.splice(key, key);
     }
 }
 
@@ -56,4 +59,6 @@ hashmap.set('Fenrir');
 console.log(hashmap);
 console.log(hashmap.buckets.length);
 console.log(hashmap.get(20));
+console.log(hashmap.has(7));
+hashmap.remove(7);
 console.log(hashmap.has(7));
