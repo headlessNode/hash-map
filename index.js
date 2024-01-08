@@ -50,6 +50,30 @@ class HashMap{
         });
         return count;
     }
+    clear(){
+        this.buckets.splice(0);
+    }
+    keys(){
+        let keys = [];
+        this.buckets.forEach((value,index)=>{
+            keys.push(index);
+        });
+        return keys;
+    }
+    values(){
+        let values = [];
+        this.buckets.forEach((value,index)=>{
+            values.push(value);
+        });
+        return values;
+    }
+    entries(){
+        let keyValuePairs = [];
+        this.buckets.forEach((value,index)=>{
+            keyValuePairs.push([index, value]);
+        });
+        return keyValuePairs;
+    }
 }
 
 let hashmap = new HashMap(16,0.75);
@@ -67,5 +91,8 @@ console.log(hashmap);
 console.log(hashmap.get(20));
 console.log(hashmap.has(7));
 hashmap.remove(7);
-// console.log(hashmap.has(7));
+console.log(hashmap.has(7));
 console.log(hashmap.length());
+console.log(hashmap.keys());
+console.log(hashmap.values());
+console.log(hashmap.entries());
