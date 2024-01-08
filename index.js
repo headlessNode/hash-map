@@ -41,7 +41,14 @@ class HashMap{
         return exists;
     }
     remove(key){
-        this.buckets.splice(key, key);
+        this.buckets.splice(key,1);
+    }
+    length(){
+        let count = 0;
+        this.buckets.forEach((value)=>{
+            return count++;
+        });
+        return count;
     }
 }
 
@@ -57,8 +64,8 @@ hashmap.set('Fenrir');
 
 
 console.log(hashmap);
-console.log(hashmap.buckets.length);
 console.log(hashmap.get(20));
 console.log(hashmap.has(7));
 hashmap.remove(7);
-console.log(hashmap.has(7));
+// console.log(hashmap.has(7));
+console.log(hashmap.length());
