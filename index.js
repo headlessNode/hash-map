@@ -1,6 +1,8 @@
+import { LinkedList } from "./linkedList.js";
+
 class HashMap{
     constructor(initialCapacity, loadFactor){
-        this.buckets = new Array(initialCapacity);
+        this.buckets = new Array(initialCapacity).fill(null);
         this.loadFactor = loadFactor;
         this.capacity = this.buckets.length;
     }
@@ -10,43 +12,95 @@ class HashMap{
         for(let i = 0; i<value.length; i++){
             hashCode = (hashCode * primeNumber) + value.charCodeAt(i);
         }
-        return hashCode % 16;
+        return hashCode % this.capacity;
     }
-    set(keyValue){
-        const keyIndex = this.hash(keyValue);
+    set(key, keyValue){
+        const keyIndex = this.hash(key);
         if (keyIndex < 0 || keyIndex >= this.capacity) {
             throw new Error("Trying to access index out of bound");
         }
-        if(keyIndex > this.capacity * this.loadFactor){
+        let count = 0
+        this.buckets.forEach((value)=>{if(value != null){count++;}});
+        if(count + 1 > this.capacity * this.loadFactor){
             this.capacity = this.capacity * 2;
-            this.set(keyValue);
+            this.set(key, keyValue);
         }else{
-            this.buckets[keyIndex] = keyValue;
+            if(this.buckets[keyIndex] === null){
+                this.buckets[keyIndex] = new LinkedList(keyValue, key);
+            }else{
+                this.buckets[keyIndex].append(keyValue, key);
+            }
+            
         }
     }
     get(key){
-        if(this.buckets[key]){
-            return this.buckets[key];
-        }else{
-            return null;
+        for(let i = 0; i<this.buckets.length; i++){
+            let element = this.buckets[i];
+            if(element){
+                if(!element.head.nextNode && element.head.key === key){
+                    return element.head.value;
+                }
+                if(element.head.nextNode){
+                    let tmp = element.head;
+                    while(tmp != null){
+                        if(tmp.key === key){
+                            return tmp.value;
+                        }
+                        tmp = tmp.nextNode;
+                    }
+                }
+            }
         }
     }
     has(key){
         let exists = false;
-        this.buckets.forEach((value,index)=>{
-            if(index === key){
-                exists = true;
+        for(let i = 0; i<this.buckets.length; i++){
+            let value = this.buckets[i];
+            if(value){
+                if(!value.head.nextNode){
+                    value.head.key === key ? exists = true : exists = false;
+                }
+                if(value.head.nextNode){
+                    let tmp = value.head;
+                    while(tmp != null){
+                        if(tmp.key === key){
+                            exists = true;
+                            break;
+                        }
+                        tmp = tmp.nextNode;
+                    }
+                }
             }
-        });
+            if(exists){
+                break;
+            }
+        }
         return exists;
     }
     remove(key){
-        this.buckets.splice(key,1);
+        let valueDeleted = false;
+        for(let i = 0; i<this.buckets.length; i++){
+            let element = this.buckets[i];
+            if(element){
+                let tmp = element.head;
+                while(tmp != null){
+                    if(tmp.key === key){
+                        
+                    }
+                    tmp = tmp.nextNode;
+                }
+            }
+            if(valueDeleted){
+                break;
+            }
+        }
     }
     length(){
         let count = 0;
         this.buckets.forEach((value)=>{
-            return count++;
+            if(value != null){
+                count++;
+            }
         });
         return count;
     }
@@ -62,8 +116,19 @@ class HashMap{
     }
     values(){
         let values = [];
-        this.buckets.forEach((value,index)=>{
-            values.push(value);
+        this.buckets.forEach((value)=>{
+            if(value != null){
+                if(value.head.nextNode === null){
+                    values.push(value.head.value);
+                }
+                else{
+                    let tmp = value.head;
+                    while(tmp != null){
+                        values.push(tmp.value);
+                        tmp = tmp.nextNode;
+                    }
+                }
+            }
         });
         return values;
     }
@@ -77,22 +142,21 @@ class HashMap{
 }
 
 let hashmap = new HashMap(16,0.75);
-hashmap.set('Odin');
-hashmap.set('Thor');
-hashmap.set('Freya');
-hashmap.set('Loki');
-hashmap.set('Frigg');
-hashmap.set('Balder');
-hashmap.set('Heimdall');
-hashmap.set('Fenrir');
+hashmap.set('headlessNode', 1);
+hashmap.set('Luna', 2);
+hashmap.set('chuna', 3);
+hashmap.set('Moona', 4);
+hashmap.set('cat', 5);
+hashmap.set('act', 6);
+hashmap.set('tac', 7);
+
 
 
 console.log(hashmap);
-console.log(hashmap.get(20));
-console.log(hashmap.has(7));
-hashmap.remove(7);
-console.log(hashmap.has(7));
-console.log(hashmap.length());
-console.log(hashmap.keys());
+console.log(hashmap.get('headlessNode'));
+console.log(hashmap.get('Luna'));
+console.log(hashmap.get('chuna'));
 console.log(hashmap.values());
-console.log(hashmap.entries());
+console.log(hashmap.has('Luna'));
+hashmap.remove('act');
+console.log(hashmap);
