@@ -84,8 +84,25 @@ class HashMap{
             if(element){
                 let tmp = element.head;
                 while(tmp != null){
-                    if(tmp.key === key){
-                        
+                    if(tmp.nextNode != null && tmp.nextNode.key === key){
+                        let currNode = tmp;
+                        let NodeToDelete = tmp.nextNode;
+                        tmp.nextNode = NodeToDelete.nextNode;
+                        valueDeleted = true;
+                        break;
+                    }
+                    else if(tmp.nextNode != null && tmp.key === key){
+                        let nodeToReplace = tmp.nextNode;
+                        tmp.key = nodeToReplace.key;
+                        tmp.value = nodeToReplace.value;
+                        tmp.nextNode = nodeToReplace.nextNode;
+                        valueDeleted = true;
+                        break;
+                    }
+                    else if(tmp.nextNode === null && tmp.key === key){
+                        this.buckets[i] = null;
+                        valueDeleted = true;
+                        break;
                     }
                     tmp = tmp.nextNode;
                 }
@@ -98,7 +115,7 @@ class HashMap{
     length(){
         let count = 0;
         this.buckets.forEach((value)=>{
-            if(value != null){
+            if(value){
                 count++;
             }
         });
@@ -159,4 +176,6 @@ console.log(hashmap.get('chuna'));
 console.log(hashmap.values());
 console.log(hashmap.has('Luna'));
 hashmap.remove('act');
+hashmap.remove('Moona');
+hashmap.remove('headlessNode');
 console.log(hashmap);
