@@ -152,8 +152,14 @@ class HashMap{
     }
     entries(){
         let keyValuePairs = [];
-        this.buckets.forEach((value,index)=>{
-            keyValuePairs.push([index, value]);
+        this.buckets.forEach((value)=>{
+            if(value != null){
+                let tmp = value.head;
+                while(tmp != null){
+                    keyValuePairs.push([tmp.key, tmp.value]);
+                    tmp = tmp.nextNode;
+                }
+            }
         });
         return keyValuePairs;
     }
@@ -177,6 +183,7 @@ console.log(hashmap.get('chuna'));
 console.log(hashmap.values());
 console.log(hashmap.keys());
 console.log(hashmap.has('Luna'));
+console.log(hashmap.entries());
 hashmap.remove('act');
 hashmap.remove('Moona');
 hashmap.remove('headlessNode');
