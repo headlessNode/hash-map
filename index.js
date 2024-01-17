@@ -34,81 +34,72 @@ class HashMap{
         }
     }
     get(key){
-        for(let i = 0; i<this.buckets.length; i++){
-            let element = this.buckets[i];
-            if(element){
-                if(!element.head.nextNode && element.head.key === key){
-                    return element.head.value;
+        const keyIndex = this.hash(key);
+        if(this.buckets[keyIndex].nextNode === null && this.buckets[keyIndex].value === key){
+            return this.buckets[keyIndex].value;
+        }
+        else if(this.buckets[keyIndex].nextNode === null && this.buckets[keyIndex].value != key){
+            return null;
+        }
+        else{
+            let element = this.buckets[keyIndex];
+            let tmp = element.head;
+            while(tmp != null){
+                if(tmp.key === key){
+                    return tmp.value;
                 }
-                if(element.head.nextNode){
-                    let tmp = element.head;
-                    while(tmp != null){
-                        if(tmp.key === key){
-                            return tmp.value;
-                        }
-                        tmp = tmp.nextNode;
-                    }
-                }
+                tmp = tmp.nextNode;
+            }
+            if(tmp === null){
+                return null;
             }
         }
     }
     has(key){
+        let keyIndex = this.hash(key);
         let exists = false;
-        for(let i = 0; i<this.buckets.length; i++){
-            let value = this.buckets[i];
-            if(value){
-                if(!value.head.nextNode){
-                    value.head.key === key ? exists = true : exists = false;
-                }
-                if(value.head.nextNode){
-                    let tmp = value.head;
-                    while(tmp != null){
-                        if(tmp.key === key){
-                            exists = true;
-                            break;
-                        }
-                        tmp = tmp.nextNode;
-                    }
-                }
+        let value = this.buckets[keyIndex];
+        if(value){
+            if(!value.head.nextNode){
+                value.head.key === key ? exists = true : exists = false;
             }
-            if(exists){
-                break;
-            }
-        }
-        return exists;
-    }
-    remove(key){
-        let valueDeleted = false;
-        for(let i = 0; i<this.buckets.length; i++){
-            let element = this.buckets[i];
-            if(element){
-                let tmp = element.head;
+            if(value.head.nextNode){
+                let tmp = value.head;
                 while(tmp != null){
-                    if(tmp.nextNode != null && tmp.nextNode.key === key){
-                        let currNode = tmp;
-                        let NodeToDelete = tmp.nextNode;
-                        tmp.nextNode = NodeToDelete.nextNode;
-                        valueDeleted = true;
-                        break;
-                    }
-                    else if(tmp.nextNode != null && tmp.key === key){
-                        let nodeToReplace = tmp.nextNode;
-                        tmp.key = nodeToReplace.key;
-                        tmp.value = nodeToReplace.value;
-                        tmp.nextNode = nodeToReplace.nextNode;
-                        valueDeleted = true;
-                        break;
-                    }
-                    else if(tmp.nextNode === null && tmp.key === key){
-                        this.buckets[i] = null;
-                        valueDeleted = true;
+                    if(tmp.key === key){
+                        exists = true;
                         break;
                     }
                     tmp = tmp.nextNode;
                 }
             }
-            if(valueDeleted){
-                break;
+        }
+        return exists;
+    }
+    remove(key){
+        let keyIndex = this.hash(key);
+        let element = this.buckets[keyIndex];
+        if(element){
+            let tmp = element.head;
+            while(tmp != null){
+                if(tmp.nextNode != null && tmp.nextNode.key === key){
+                    let currNode = tmp;
+                    let NodeToDelete = tmp.nextNode;
+                    tmp.nextNode = NodeToDelete.nextNode;
+                    break;
+                }
+                else if(tmp.nextNode != null && tmp.key === key){
+                    let nodeToReplace = tmp.nextNode;
+                    tmp.key = nodeToReplace.key;
+                    tmp.value = nodeToReplace.value;
+                    tmp.nextNode = nodeToReplace.nextNode;
+                    break;
+                }
+                else if(tmp.nextNode === null && tmp.key === key){
+                    this.buckets[keyIndex] = null;
+                    break;
+                }
+                tmp = tmp.nextNode;
             }
         }
     }
@@ -183,8 +174,6 @@ console.log(hashmap.get('chuna'));
 console.log(hashmap.values());
 console.log(hashmap.keys());
 console.log(hashmap.has('Luna'));
+console.log(hashmap.remove('Luna'));
 console.log(hashmap.entries());
-hashmap.remove('act');
-hashmap.remove('Moona');
-hashmap.remove('headlessNode');
 console.log(hashmap);
